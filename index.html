@@ -1,8 +1,9 @@
-<html lang="en">
+<html data-theme="dark" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/pico.css">
     <title>Slippi Custom Leaderboard</title>
 </head>
 <body>
@@ -63,6 +64,62 @@ const query = `fragment userProfilePage on User {
         }
 ` 
 
+function rankCalculation(elo) {
+        if (elo < 766){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/e/e9/Season_2022_-_Bronze.png");
+        }
+        if (elo < 914){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/e/e9/Season_2022_-_Bronze.png");
+        }
+        if (elo < 1055){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/e/e9/Season_2022_-_Bronze.png");
+        }
+        if (elo < 1189){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/4/44/Season_2022_-_Silver.png");
+        }
+        if (elo < 1316){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/4/44/Season_2022_-_Silver.png");
+        }
+        if (elo < 1436){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/4/44/Season_2022_-_Silver.png");
+        }
+        if (elo < 1549){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/8/8d/Season_2022_-_Gold.png");
+        }
+        if (elo < 1654){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/8/8d/Season_2022_-_Gold.png");
+        }
+        if (elo < 1752){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/8/8d/Season_2022_-_Gold.png");
+        }
+        if (elo < 1843){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/3/3b/Season_2022_-_Platinum.png");
+        }
+        if (elo < 1928){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/3/3b/Season_2022_-_Platinum.png");
+        }
+        if (elo < 2004){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/3/3b/Season_2022_-_Platinum.png");
+        }
+        if (elo < 2074){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/e/ee/Season_2022_-_Diamond.png");
+        }
+        if (elo < 2137){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/e/ee/Season_2022_-_Diamond.png");
+        }
+        if (elo < 2192){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/e/ee/Season_2022_-_Diamond.png");
+        }
+        if (elo < 2275){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/e/eb/Season_2022_-_Master.png/");
+        }
+        if (elo < 2350){
+            return("https://static.wikia.nocookie.net/leagueoflegends/images/e/eb/Season_2022_-_Master.png/");
+        }
+        return("https://static.wikia.nocookie.net/leagueoflegends/images/e/eb/Season_2022_-_Master.png/");
+}
+
+
 async function enterCodes() {
     let userDatasWithGames = [];
     let unrankedUsers = [];
@@ -77,6 +134,7 @@ async function enterCodes() {
             }
             else {
                 ud.winrate = Math.round(ud.wins / ud.gamesPlayed * 100) + '%';
+                ud.rank = rankCalculation(ud.elo);
                 ud.elo = Math.round(ud.elo);
                 userDatasWithGames.push(ud);
             }
@@ -94,6 +152,7 @@ async function enterCodes() {
     <th>Code</th>
     <th>Display Name</th>
     <th>Elo</th>
+    <td>Rank</td>
     <th>Games</th>
     <th>Wins</th>
     <th>Winrate</th>
@@ -105,6 +164,7 @@ async function enterCodes() {
     <td>${ud.code}</td>
     <td>${ud.diplayName}</td>
     <td>${ud.elo}</td>
+    <td><img src="${ud.rank}" height="50" width="50"></td>
     <td>${ud.gamesPlayed}</td>
     <td>${ud.wins}</td>
     <td>${ud.winrate}</td>
