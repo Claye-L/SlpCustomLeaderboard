@@ -1,0 +1,145 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slippi Custom Leaderboard</title>
+</head>
+<body>
+    <div>
+        <div>
+            <textarea id="codesInputArea" placeholder="Enter list of codes here (comma, space or line separated)"></textarea>
+            <button onclick="enterCodes()">Fetch</button>
+        </div>
+    </div>
+    <div>
+        <table id="rankingsTable">
+
+        </table>
+    </div>
+</body>
+<script>
+
+const query = `fragment userProfilePage on User {
+    fbUid
+    displayName
+    connectCode {
+        code
+            __typename
+        }
+    status
+    activeSubscription {
+        level
+        hasGiftSub
+        __typename
+        }
+    rankedNetplayProfile {
+        id
+        ratingOrdinal
+        ratingUpdateCount
+        wins
+        losses
+        dailyGlobalPlacement
+        dailyRegionalPlacement
+        continent
+        characters {
+            id
+            character
+            gameCount
+            __typename
+            }
+        __typename
+        }
+        __typename
+        }
+        query AccountManagementPageQuery($cc: String!) {
+            getConnectCode(code: $cc) {
+                user {
+                    ...userProfilePage
+                    __typename
+                    }
+            __typename
+            }
+        }
+` 
+
+async function enterCodes() {
+    let userDatasWithGames = [];
+    let unrankedUsers = [];
+    let rawCodes = document.getElementById("codesInputArea").value.split(/(,|\s)/);
+    let progress = 0;
+    for (const c of rawCodes) {
+        if(c.match(/[a-zA-Z0-9]+#[0-9]+/)) {
+            let ud = await sendRequest(c.toUpperCase());
+            if (ud.gamesPlayed < 1) {
+                ud.elo = 0;
+                unrankedUsers.push(ud)
+            }
+            else {
+                ud.winrate = Math.round(ud.wins / ud.gamesPlayed * 100) + '%';
+                ud.elo = Math.round(ud.elo);
+                userDatasWithGames.push(ud);
+            }
+        }
+        else {
+            //TODO invalid user or code
+        }
+        progress++;
+    }
+    userDatasWithGames.sort((a,b) => b.elo - a.elo);
+    let rankingsTable = document.getElementById("rankingsTable");
+    rankingsTable.innerHTML = "";
+    rankingsTable.innerHTML = `<tr>
+    <th>Ranking</th>
+    <th>Code</th>
+    <th>Display Name</th>
+    <th>Elo</th>
+    <th>Games</th>
+    <th>Wins</th>
+    <th>Winrate</th>
+  </tr>`
+  userDatasWithGames.forEach((ud, i) => {
+    rankingsTable.innerHTML += `
+    <tr>
+    <td>${i+1}</td>
+    <td>${ud.code}</td>
+    <td>${ud.diplayName}</td>
+    <td>${ud.elo}</td>
+    <td>${ud.gamesPlayed}</td>
+    <td>${ud.wins}</td>
+    <td>${ud.winrate}</td>
+  </tr>
+    `
+  })
+    
+    
+    
+    console.table(userDatasWithGames);
+    console.table(unrankedUsers);
+}
+
+
+async function sendRequest(connectCode) {
+    let res = await fetch("https://gql-gateway-dot-slippi.uc.r.appspot.com/graphql", 
+    {
+        method: 'post',
+	    body: JSON.stringify({query, variables : {"cc" : connectCode}}),
+	    headers: {'Content-Type': 'application/json'}
+    })
+    let d = await res.json();
+    let ud = d.data.getConnectCode;
+    if(ud) {
+        return {
+        code : ud.user.connectCode.code,
+        diplayName : ud.user.displayName,
+        elo : ud.user.rankedNetplayProfile.ratingOrdinal,
+        gamesPlayed : ud.user.rankedNetplayProfile.ratingUpdateCount,
+        wins : ud.user.rankedNetplayProfile.wins
+    };
+    }
+    else
+        return null;
+    
+}
+</script>
+</html>
