@@ -14,10 +14,10 @@
         </div>
     </div>
     <div>
-        <button id="shareLink" onclick="copyShareLink()"> Copy Link to this leaderboard</button>
+        <button id="shareLink" onclick="copyShareLink()" class="secondary"> Copy Link to this leaderboard</button>
     </div>
     <div>
-        <table id="rankingsTable">
+        <table id="rankingsTable" style="text-align: center">
 
         </table>
     </div>
@@ -131,6 +131,7 @@ function rankCalculation(elo) {
 }
 
 async function enterCodes() {
+    document.getElementById("fetchButton").setAttribute("aria-busy", "true");
     let userDatasWithGames = [];
     let unrankedUsers = [];
     let rawCodes = document.getElementById("codesInputArea").value.split(/(,|\s)/);
@@ -157,30 +158,23 @@ async function enterCodes() {
     let rankingsTable = document.getElementById("rankingsTable");
     rankingsTable.innerHTML = "";
     rankingsTable.innerHTML = `<tr>
-    <th>Ranking</th>
-    <th>Code</th>
-    <th>Display Name</th>
-    <th>Elo</th>
-    <td>Rank</td>
-    <th>Games</th>
-    <th>Wins</th>
-    <th>Winrate</th>
+    <th style="text-align: center; width:20px">Ranking</th>
+    <th style="text-align: center">Code</th>
+    <th style="text-align: center">Elo</th>
+    <th style="text-align: center">Winrate</th>
   </tr>`
   userDatasWithGames.forEach((ud, i) => {
     rankingsTable.innerHTML += `
     <tr>
-    <td>${i+1}</td>
-    <td>${ud.code}</td>
-    <td>${ud.diplayName}</td>
-    <td>${ud.elo}</td>
-    <td><img src="${ud.rank}" height="50" width="50"></td>
-    <td>${ud.gamesPlayed}</td>
-    <td>${ud.wins}</td>
-    <td>${ud.winrate}</td>
+    <td style="text-align: center" >${i+1}</td>
+    <td> <div style="text-align: center">${ud.code} </div> <div style="text-align: center">${ud.diplayName}</div></td>
+    <td><div><img src="${ud.rank}" height="50" width="50" style="display:block; margin-left: auto;"></div><div style="text-align: center;">${ud.elo}</div></td>
+    <td><div style="text-align: center" >${ud.winrate}</div><div style="text-align: center">out of ${ud.gamesPlayed} games</div></td>
   </tr>
     `
   })
     generateShareLink(codes);
+    document.getElementById("fetchButton").setAttribute("aria-busy","false");
 }
 
 async function sendRequest(connectCode) {
