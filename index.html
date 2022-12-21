@@ -134,7 +134,10 @@ async function enterCodes() {
     let userDatasWithGames = [];
     let unrankedUsers = [];
     let rawCodes = document.getElementById("codesInputArea").value.split(/(,|\s)/);
-    let codes = rawCodes.filter(x => x.match(/[a-zA-Z0-9]+#[0-9]+/)).map(x => x.toUpperCase());
+    let codes = rawCodes
+        .filter(x => x.match(/[a-zA-Z0-9]+#[0-9]+/))
+        .map(x => x.toUpperCase())
+        .filter((x,i,s) => s.indexOf(x) === i);
     let progress = 0;
     for (const c of codes) {
             let ud = await sendRequest(c);
