@@ -70,14 +70,24 @@ const query = `fragment userProfilePage on User {
         }
 ` 
 var shareLink = window.location.href;
-
-let params = new URLSearchParams(window.location.search);
-if(params.get('players')) {
-    let s = params.get('players');
-    s=s.replaceAll("-","#");
-    document.getElementById("codesInputArea").value = s.replaceAll("_","\n");
+window.onload = async ev => {
+    let params = new URLSearchParams(window.location.search);
+    if(params.get('leaderboard')) {
+    let l = params.get('leaderboard');
+    let baseurl =  window.location.href.split('?')[0];
+    let res = await fetch(baseurl + "/leaderboards/"+l +".txt");
+    let rawcodes = await res.text();
+    document.getElementById("codesInputArea").value = rawcodes;
     enterCodes();
-}
+    }
+    else if(params.get('players')) {
+        let s = params.get('players');
+        s=s.replaceAll("-","#");
+        document.getElementById("codesInputArea").value = s.replaceAll("_","\n");
+        enterCodes();
+    }
+};
+
 
 function rankCalculation(elo) {
         if (elo < 766){
