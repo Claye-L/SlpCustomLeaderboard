@@ -76,6 +76,7 @@ if(params.get('players')) {
     let s = params.get('players');
     s=s.replaceAll("-","#");
     document.getElementById("codesInputArea").value = s.replaceAll("_","\n");
+    enterCodes();
 }
 
 function rankCalculation(elo) {
