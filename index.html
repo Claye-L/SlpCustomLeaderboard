@@ -91,57 +91,57 @@ window.onload = async ev => {
 
 function rankCalculation(elo) {
         if (elo < 766){
-            return("ranksIcons/B1.svg");
+            return({src : "ranksIcons/B1.svg", title: "Bronze 1"});
         }
         if (elo < 914){
-            return("ranksIcons/B2.svg");
+            return({src : "ranksIcons/B2.svg", title: "Bronze 2"});
         }
         if (elo < 1055){
-            return("ranksIcons/B3.svg");
+            return({src : "ranksIcons/B3.svg", title: "Bronze 3"});
         }
         if (elo < 1189){
-            return("ranksIcons/S1.svg");
+            return({src : "ranksIcons/S1.svg", title: "Silver 1"});
         }
         if (elo < 1316){
-            return("ranksIcons/S2.svg");
+            return({src : "ranksIcons/S2.svg", title: "Silver 2"});
         }
         if (elo < 1436){
-            return("ranksIcons/S3.svg");
+            return({src : "ranksIcons/S3.svg", title: "Silver 3"});
         }
         if (elo < 1549){
-            return("ranksIcons/G1.svg");
+            return({src : "ranksIcons/G1.svg", title: "Gold 1"});
         }
         if (elo < 1654){
-            return("ranksIcons/G2.svg");
+            return({src : "ranksIcons/G2.svg", title: "Gold 2"});
         }
         if (elo < 1752){
-            return("ranksIcons/G3.svg");
+            return({src : "ranksIcons/G3.svg", title: "Gold 3"});
         }
         if (elo < 1843){
-            return("ranksIcons/P1.svg");
+            return({src : "ranksIcons/P1.svg", title: "Platinum 1"});
         }
         if (elo < 1928){
-            return("ranksIcons/P2.svg");
+            return({src : "ranksIcons/P2.svg", title: "Platinum 2"});
         }
         if (elo < 2004){
-            return("ranksIcons/P3.svg");
+            return({src : "ranksIcons/P3.svg", title: "Platinum 3"});
         }
         if (elo < 2074){
-            return("ranksIcons/D1.svg");
+            return({src : "ranksIcons/D1.svg", title: "Diamond 1"});
         }
         if (elo < 2137){
-            return("ranksIcons/D2.svg");
+            return({src : "ranksIcons/D2.svg", title: "Diamond 2"});
         }
         if (elo < 2192){
-            return("ranksIcons/D3.svg");
+            return({src : "ranksIcons/D3.svg", title: "Diamond 3"});
         }
         if (elo < 2275){
-            return("ranksIcons/M1.svg");
+            return({src : "ranksIcons/M1.svg", title: "Master 1"});
         }
         if (elo < 2350){
-            return("ranksIcons/M2.svg");
+            return({src : "ranksIcons/M2.svg", title: "Master 2"});
         }
-        return("ranksIcons/M3.svg");
+        return({src : "ranksIcons/M3.svg", title: "Master 3"});
 }
 
 async function enterCodes() {
@@ -168,7 +168,8 @@ async function enterCodes() {
             }
             else {
                 ud.winrate = Math.round(ud.wins / ud.gamesPlayed * 100) + '%';
-                ud.rank = rankCalculation(ud.elo);
+                ud.rankinfo = rankCalculation(ud.elo);
+                ud.rank = ud.rankinfo.src;
                 ud.elo = Math.round(ud.elo);
                 userDatasWithGames.push(ud);
             }
@@ -188,8 +189,8 @@ async function enterCodes() {
     <tr>
     <td style="text-align: center" >${i+1}</td>
     <td> <div style="text-align: center">${ud.code} </div> <div style="text-align: center">${ud.diplayName}</div></td>
-    <td><div><img src="${ud.rank}" height="50" width="50" style="display: block;margin-left: auto;margin-right: auto"></div><div style="text-align: center;">${ud.elo}</div></td>
-    <td><div style="text-align: center" >${ud.winrate}</div><div style="text-align: center">out of ${ud.gamesPlayed} games</div></td>
+    <td><div><img src="${ud.rank}" title="${ud.rankinfo.title}" height="50" width="50" style="display: block;margin-left: auto;margin-right: auto"></div><div style="text-align: center;">${ud.elo}</div></td>
+    <td><div style="text-align: center" >${ud.winrate}</div><div style="text-align: center">out of ${ud.gamesPlayed} sets</div></td>
   </tr>
     `
   })
