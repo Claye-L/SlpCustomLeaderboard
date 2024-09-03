@@ -156,11 +156,10 @@ async function enterCodes() {
         .map(x => x.toUpperCase())
         .filter((x,i,s) => s.indexOf(x) === i);
     let progress = 0;
-    for (const c of codes) {
-            let ud = await sendRequest(c);
-            if(!ud) {
+    await Promise.all(codes.map(x => sendRequest(x))).then( users => users.forEach(ud => {
+        if(!ud.valid) {
                 //user not found
-                errorUsers.push(c);
+                errorUsers.push(ud.code);
             }
             else if (ud.gamesPlayed < 1) {
                 ud.elo = 0;
@@ -173,8 +172,7 @@ async function enterCodes() {
                 ud.elo = Math.round(ud.elo);
                 userDatasWithGames.push(ud);
             }
-        progress++;
-    }
+    }))
     userDatasWithGames.sort((a,b) => b.elo - a.elo);
     let rankingsTable = document.getElementById("rankingsTable");
     rankingsTable.innerHTML = "";
@@ -217,11 +215,15 @@ async function sendRequest(connectCode) {
         diplayName : ud.user.displayName,
         elo : ud.user.rankedNetplayProfile.ratingOrdinal,
         gamesPlayed : ud.user.rankedNetplayProfile.ratingUpdateCount,
-        wins : ud.user.rankedNetplayProfile.wins
+        wins : ud.user.rankedNetplayProfile.wins,
+        valid : true,
     };
     }
     else
-        return null;
+        return {
+            code: connectCode,
+            valid: false,
+        }
     
 }
 
