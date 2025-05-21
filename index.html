@@ -168,14 +168,14 @@ async function sendRequest(connectCode) {
 	    headers: {'Content-Type': 'application/json'}
     })
     let d = await res.json();
-    let ud = d.data.getConnectCode;
+    let ud = d.data.getUser;
     if(ud) {
         return {
-        code : ud.user.connectCode.code,
-        diplayName : ud.user.displayName,
-        elo : ud.user.rankedNetplayProfile.ratingOrdinal,
-        gamesPlayed : ud.user.rankedNetplayProfile.ratingUpdateCount,
-        wins : ud.user.rankedNetplayProfile.wins,
+        code : ud.connectCode.code,
+        diplayName : ud.displayName,
+        elo : ud.rankedNetplayProfile.ratingOrdinal,
+        gamesPlayed : ud.rankedNetplayProfile.ratingUpdateCount,
+        wins : ud.rankedNetplayProfile.wins,
         valid : true,
     };
     }
