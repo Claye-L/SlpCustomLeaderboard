@@ -164,7 +164,7 @@ async function sendRequest(connectCode) {
     let res = await fetch("https://internal.slippi.gg/graphql", 
     {
         method: 'post',
-	    body: JSON.stringify({query, variables : {"cc" : connectCode}}),
+	    body: JSON.stringify({query, variables : {"cc" : connectCode, "uid" : connectCode}}),
 	    headers: {'Content-Type': 'application/json'}
     })
     let d = await res.json();
