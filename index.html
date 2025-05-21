@@ -195,7 +195,7 @@ async function enterCodes() {
 }
 
 async function sendRequest(connectCode) {
-    let res = await fetch("https://gql-gateway-dot-slippi.uc.r.appspot.com/graphql", 
+    let res = await fetch("https://internal.slippi.gg/graphql", 
     {
         method: 'post',
 	    body: JSON.stringify({query, variables : {"cc" : connectCode}}),
